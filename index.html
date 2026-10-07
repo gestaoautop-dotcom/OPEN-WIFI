@@ -22,8 +22,8 @@
 <div class="mapShell">
 <div class="toolbar"><div class="search"><input id="q" placeholder="Cidade, bairro, endereço ou local"><button class="tool" id="searchBtn">Buscar</button></div><button class="tool" id="locateBtn">Minha localização</button><button class="tool" id="loadBtn">Atualizar esta área</button></div>
 <div class="filters">
-<button class="filter active" data-filter="all">Todos</button><button class="filter" data-filter="open">Abertos</button><button class="filter" data-filter="public">Senha pública</button><button class="filter" data-filter="customer">Clientes / associados</button><button class="filter" data-filter="protected">Protegidos</button>
-<div class="legend"><span><i class="dot green"></i>Aberto</span><span><i class="dot blue"></i>Senha pública</span><span><i class="dot yellow"></i>Clientes</span><span><i class="dot gray"></i>Protegido</span></div>
+<button class="filter active" data-filter="all">Todos</button><button class="filter" data-filter="open">Abertos</button><button class="filter" data-filter="public">Senha pública</button><button class="filter" data-filter="customer">Clientes / associados</button><button class="filter" data-filter="protected">Protegidos</button><button class="filter" data-filter="unknown">Comércios próximos</button>
+<div class="legend"><span><i class="dot green"></i>Aberto</span><span><i class="dot blue"></i>Senha pública</span><span><i class="dot yellow"></i>Clientes</span><span><i class="dot gray"></i>Protegido</span><span><i class="dot" style="background:#a855f7"></i>Comércio</span></div>
 </div>
 <div class="grid"><aside class="side"><div class="stats"><div class="stat"><b id="total">0</b><span>na base</span></div><div class="stat"><b id="visible">0</b><span>visíveis</span></div><div class="stat"><b id="verified">0</b><span>verificados</span></div></div><div class="sourceStatus" id="sourceStatus">Fontes: OpenWiFi verificada + OpenStreetMap</div><div id="list"></div></aside><div class="mapWrap"><div id="map"></div><button class="add" id="addBtn">+ Cadastrar Wi‑Fi</button></div></div>
 </div></div></section>
@@ -75,8 +75,8 @@ var osm=[], remote=[], local=JSON.parse(localStorage.getItem('openwifi-points')|
 function el(id){return document.getElementById(id)}
 function toast(t){el('toast').textContent=t;el('toast').classList.add('show');setTimeout(function(){el('toast').classList.remove('show')},2200)}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
-function accessLabel(a){return {open:'ABERTO',public:'SENHA PÚBLICA',customer:'CLIENTES / ASSOCIADOS',protected:'PROTEGIDO'}[a]||'NÃO CLASSIFICADO'}
-function color(a){return {open:'#16a34a',public:'#2563eb',customer:'#eab308',protected:'#6b7280'}[a]||'#7c3aed'}
+function accessLabel(a){return {open:'ABERTO',public:'SENHA PÚBLICA',customer:'CLIENTES / ASSOCIADOS',protected:'PROTEGIDO',unknown:'WI-FI NÃO CONFIRMADO'}[a]||'NÃO CLASSIFICADO'}
+function color(a){return {open:'#16a34a',public:'#2563eb',customer:'#eab308',protected:'#6b7280',unknown:'#a855f7'}[a]||'#7c3aed'}
 function classifyOSM(t){
  var acc=(t.internet_access||'').toLowerCase(), fee=(t.internet_access_fee||t.fee||'').toLowerCase();
  var publicPw=t['internet_access:password']||t['wifi:password']||t['password'];
@@ -114,7 +114,7 @@ function allPoints(){
 }
 function passes(p){return activeFilter==='all'||p.access===activeFilter}
 function popupHTML(p){
- var pw=(p.access==='public'&&p.password)?'<div class="pw">Senha pública: '+esc(p.password)+'</div>':'<div class="pw none">'+(p.access==='open'?'Sem senha':p.access==='customer'?'Senha fornecida no local':'Senha não pública')+'</div>';
+ var pw=(p.access==='public'&&p.password)?'<div class="pw">Senha pública: '+esc(p.password)+'</div>':'<div class="pw none">'+(p.access==='open'?'Sem senha':p.access==='customer'?'Senha fornecida no local':p.access==='unknown'?'Wi-Fi ainda não confirmado neste local':'Senha não pública')+'</div>';
  var addr=p.address?'<br>'+esc(p.address):'';
  var ver=p.verified?'<br><b>✓ Verificado</b>':'';
  var cat=p.category?'<br><small>'+esc(p.category)+'</small>':'';
@@ -133,7 +133,7 @@ function render(){
  vis.forEach(function(p){p._distance=distanceMeters(c.lat,c.lng,p.lat,p.lng)});
  vis.sort(function(a,b){return (b.verified?1:0)-(a.verified?1:0) || a._distance-b._distance}).slice(0,50).forEach(function(p){
    var d=document.createElement('div');d.className='card';
-   var pw=p.access==='public'&&p.password?'<div class="pw">Senha pública: '+esc(p.password)+'</div>':'<div class="pw none">'+(p.access==='open'?'Sem senha':p.access==='customer'?'Solicitar senha no local':'Senha não pública')+'</div>';
+   var pw=p.access==='public'&&p.password?'<div class="pw">Senha pública: '+esc(p.password)+'</div>':'<div class="pw none">'+(p.access==='open'?'Sem senha':p.access==='customer'?'Solicitar senha no local':p.access==='unknown'?'Wi-Fi não confirmado':'Senha não pública')+'</div>';
    d.innerHTML='<b>'+esc(p.venue||p.name)+'</b><div class="commerce">'+esc(p.category||'Estabelecimento')+' • '+distanceLabel(p._distance)+'</div><div class="meta">'+esc(p.name||'SSID não informado')+(p.address?'<br>'+esc(p.address):'')+(p.openingHours?'<br>Horário: '+esc(p.openingHours):'')+'<br>'+(p.source==='verified'?'OpenWiFi verificado':p.source==='osm'?'OpenStreetMap':p.source==='supabase'?'Base compartilhada':'Contribuição neste navegador')+'</div><span class="badge" style="color:'+color(p.access)+'">'+accessLabel(p.access)+(p.verified?' • ✓ VERIFICADO':'')+'</span>'+pw;
    d.onclick=function(){map.setView([p.lat,p.lng],17)};el('list').appendChild(d);
  });
@@ -144,7 +144,15 @@ async function search(){
 }
 async function loadOSM(){
  var b=map.getBounds(),s=b.getSouth().toFixed(5),w=b.getWest().toFixed(5),n=b.getNorth().toFixed(5),e=b.getEast().toFixed(5);
- var q='[out:json][timeout:18];(nwr["internet_access"="wlan"]('+s+','+w+','+n+','+e+');nwr["internet_access"="yes"]('+s+','+w+','+n+','+e+');nwr["internet_access:ssid"]('+s+','+w+','+n+','+e+'););out center tags 400;';
+ var q='[out:json][timeout:20];('+
+ 'nwr["internet_access"="wlan"]('+s+','+w+','+n+','+e+');'+
+ 'nwr["internet_access"="yes"]('+s+','+w+','+n+','+e+');'+
+ 'nwr["internet_access:ssid"]('+s+','+w+','+n+','+e+');'+
+ 'nwr["amenity"~"restaurant|cafe|fast_food|bar|pub|fuel|bank|pharmacy|hospital|clinic|library|school|university|college|marketplace"]('+s+','+w+','+n+','+e+');'+
+ 'nwr["shop"]('+s+','+w+','+n+','+e+');'+
+ 'nwr["tourism"~"hotel|hostel|museum|attraction"]('+s+','+w+','+n+','+e+');'+
+ 'nwr["leisure"~"sports_centre|fitness_centre"]('+s+','+w+','+n+','+e+');'+
+ ');out center tags 700;';
  var endpoints=[
    'https://overpass.kumi.systems/api/interpreter',
    'https://overpass-api.de/api/interpreter',
