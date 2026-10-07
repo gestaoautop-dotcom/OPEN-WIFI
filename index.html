@@ -116,17 +116,48 @@ async function search(){
 }
 async function loadOSM(){
  var b=map.getBounds(),s=b.getSouth().toFixed(5),w=b.getWest().toFixed(5),n=b.getNorth().toFixed(5),e=b.getEast().toFixed(5);
- var q='[out:json][timeout:20];(node["internet_access"="wlan"]('+s+','+w+','+n+','+e+');way["internet_access"="wlan"]('+s+','+w+','+n+','+e+');relation["internet_access"="wlan"]('+s+','+w+','+n+','+e+');node["internet_access:ssid"]('+s+','+w+','+n+','+e+'););out center tags 350;';
- var r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(q)});var d=await r.json();var ids={};osm.forEach(function(p){ids[p.id]=p});
- (d.elements||[]).forEach(function(x){var t=x.tags||{},lat=x.lat||(x.center&&x.center.lat),lng=x.lon||(x.center&&x.center.lon);if(lat&&lng){var id='osm-'+x.type+'-'+x.id;ids[id]={id:id,source:'osm',venue:t.name||t.operator||'Local com Wi‑Fi',name:t['internet_access:ssid']||t.ssid||'SSID não informado',lat:lat,lng:lng,access:classifyOSM(t),password:'',verified:false,address:'',note:'Dados públicos do OpenStreetMap.'}});osm=Object.values(ids);
+ var q='[out:json][timeout:15];(node["internet_access"="wlan"]('+s+','+w+','+n+','+e+');way["internet_access"="wlan"]('+s+','+w+','+n+','+e+');node["internet_access:ssid"]('+s+','+w+','+n+','+e+'););out center tags 250;';
+ var endpoints=[
+   'https://overpass.kumi.systems/api/interpreter',
+   'https://overpass-api.de/api/interpreter',
+   'https://overpass.nchc.org.tw/api/interpreter'
+ ];
+ var lastError=null;
+ for(var i=0;i<endpoints.length;i++){
+   try{
+     var controller=new AbortController();
+     var timer=setTimeout(function(){controller.abort()},12000);
+     var r=await fetch(endpoints[i],{
+       method:'POST',
+       headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+       body:'data='+encodeURIComponent(q),
+       signal:controller.signal
+     });
+     clearTimeout(timer);
+     if(!r.ok) throw new Error('HTTP '+r.status);
+     var d=await r.json();
+     var ids={};osm.forEach(function(p){ids[p.id]=p});
+     (d.elements||[]).forEach(function(x){
+       var t=x.tags||{},lat=x.lat||(x.center&&x.center.lat),lng=x.lon||(x.center&&x.center.lon);
+       if(lat&&lng){
+         var id='osm-'+x.type+'-'+x.id;
+         ids[id]={id:id,source:'osm',venue:t.name||t.operator||'Local com Wi‑Fi',name:t['internet_access:ssid']||t.ssid||'SSID não informado',lat:lat,lng:lng,access:classifyOSM(t),password:'',verified:false,address:'',note:'Dados públicos do OpenStreetMap.'}
+       }
+     });
+     osm=Object.values(ids);
+     return {ok:true,endpoint:endpoints[i],count:(d.elements||[]).length};
+   }catch(err){lastError=err}
+ }
+ return {ok:false,error:lastError?String(lastError.message||lastError):'indisponível'};
 }
 async function loadSupabase(){
- var c=window.OPENWIFI_SUPABASE;if(!c.url||!c.anonKey)return;
+ var c=window.OPENWIFI_SUPABASE;if(!c.url||!c.anonKey)return {ok:false,skipped:true};
  try{
    var b=map.getBounds(),url=c.url.replace(/\/$/,'')+'/rest/v1/wifi_points?select=*&latitude=gte.'+b.getSouth()+'&latitude=lte.'+b.getNorth()+'&longitude=gte.'+b.getWest()+'&longitude=lte.'+b.getEast();
    var r=await fetch(url,{headers:{apikey:c.anonKey,Authorization:'Bearer '+c.anonKey}});if(!r.ok)throw 0;var rows=await r.json();
    remote=rows.map(function(x){return {id:'supabase-'+x.id,source:'supabase',venue:x.venue_name||x.venue||x.ssid||'Wi‑Fi',name:x.ssid||'',lat:+x.latitude,lng:+x.longitude,access:x.access_type||'protected',password:x.password_visibility==='public'?(x.public_password||''):'',verified:!!x.verified,address:x.address||'',note:x.note||''}});
- }catch(e){}
+   return {ok:true,count:rows.length};
+ }catch(e){return {ok:false,error:String(e&&e.message||e)}}
 }
 async function saveSupabase(p){
  var c=window.OPENWIFI_SUPABASE;if(!c.url||!c.anonKey)return false;
@@ -136,8 +167,19 @@ async function saveSupabase(p){
  }catch(e){return false}
 }
 async function loadArea(){
- el('loadBtn').textContent='Carregando…';el('sourceStatus').textContent='Consultando: OpenWiFi verificada + OpenStreetMap'+(window.OPENWIFI_SUPABASE.url?' + base compartilhada':'');
- await Promise.allSettled([loadOSM(),loadSupabase()]);render();el('loadBtn').textContent='Atualizar esta área';toast('Fontes atualizadas');
+ el('loadBtn').textContent='Carregando…';
+ el('sourceStatus').textContent='Consultando fontes…';
+ var results=await Promise.all([loadOSM(),loadSupabase()]);
+ var osmResult=results[0],dbResult=results[1];
+ render();
+ el('loadBtn').textContent='Atualizar esta área';
+ var parts=['OpenWiFi verificada: online'];
+ parts.push(osmResult&&osmResult.ok?'OpenStreetMap: online':'OpenStreetMap: temporariamente indisponível');
+ if(dbResult&&dbResult.skipped) parts.push('Base compartilhada: ainda não conectada');
+ else parts.push(dbResult&&dbResult.ok?'Base compartilhada: online':'Base compartilhada: indisponível');
+ el('sourceStatus').textContent=parts.join(' • ');
+ if(osmResult&&osmResult.ok) toast('Área atualizada');
+ else toast('Mapa carregado com fontes disponíveis');
 }
 function locate(){navigator.geolocation?navigator.geolocation.getCurrentPosition(function(p){map.setView([p.coords.latitude,p.coords.longitude],16);loadArea()},function(){toast('Permita sua localização no navegador')}):toast('Geolocalização indisponível')}
 document.querySelectorAll('.filter').forEach(function(b){b.onclick=function(){document.querySelectorAll('.filter').forEach(function(x){x.classList.remove('active')});b.classList.add('active');activeFilter=b.dataset.filter;render()}});
