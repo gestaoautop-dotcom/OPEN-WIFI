@@ -6,7 +6,7 @@
 <meta name="description" content="Encontre pontos de Wi-Fi abertos, públicos, para clientes e redes protegidas conhecidas.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#101828;background:#fff}button,input,select{font:inherit}.wrap{width:min(1220px,calc(100% - 32px));margin:auto}header{position:sticky;top:0;z-index:1000;background:#fffffff2;backdrop-filter:blur(12px);border-bottom:1px solid #e5e7eb}.nav{height:70px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:20px;font-weight:850}.nav a{color:#475467;text-decoration:none;margin-left:22px;font-size:14px}.cta,.btn.dark{border:0;background:#101828;color:#fff}.cta{padding:11px 15px;border-radius:10px;font-weight:750}.hero{padding:68px 0 50px;background:linear-gradient(#fff,#f8fafc)}.heroGrid{display:grid;grid-template-columns:1.08fr .92fr;gap:46px;align-items:center}.tag{display:inline-block;border:1px solid #e5e7eb;border-radius:999px;padding:7px 10px;font-size:12px;color:#667085}.hero h1{font-size:clamp(44px,6vw,72px);line-height:.99;letter-spacing:-.055em;margin:18px 0}.hero p{font-size:18px;line-height:1.6;color:#667085;max-width:670px}.actions{display:flex;gap:10px;margin-top:24px}.btn{border:1px solid #e5e7eb;background:#fff;padding:12px 16px;border-radius:11px;font-weight:750}.visual{height:330px;border-radius:24px;border:1px solid #e5e7eb;background:radial-gradient(circle at 25% 25%,#dbeafe,transparent 30%),linear-gradient(135deg,#f8fafc,#eef2f7);position:relative;box-shadow:0 18px 50px #11182716}.visual:before{content:"OPEN-WIFI • múltiplas fontes";position:absolute;left:18px;top:18px;background:#fff;padding:11px 13px;border-radius:12px;border:1px solid #e5e7eb;font-weight:700;font-size:13px}.pin{position:absolute;width:20px;height:20px;border-radius:50%;border:4px solid #fff;box-shadow:0 5px 16px #0003}.p1{left:26%;top:48%;background:#16a34a}.p2{left:57%;top:62%;background:#2563eb}.p3{left:74%;top:34%;background:#6b7280}.p4{left:42%;top:72%;background:#eab308}.section{padding:72px 0}.section.alt{background:#f8fafc}.head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:24px}.head h2{font-size:clamp(32px,4vw,48px);letter-spacing:-.04em;margin:0}.head p{margin:0;max-width:620px;color:#667085;line-height:1.6}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.feature{border:1px solid #e5e7eb;border-radius:18px;padding:20px;background:#fff}.feature b{display:block;margin-bottom:7px}.feature p{margin:0;color:#667085;line-height:1.5;font-size:13px}.mapShell{border:1px solid #e5e7eb;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px #11182716;background:#fff}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:16px;border-bottom:1px solid #e5e7eb}.search{display:flex;gap:8px}.search input{width:100%;border:1px solid #dfe3e8;border-radius:10px;padding:12px}.tool{border:1px solid #dfe3e8;background:#fff;border-radius:10px;padding:12px 14px;font-weight:700}.filters{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-bottom:1px solid #e5e7eb;background:#fafafa}.filter{border:1px solid #d0d5dd;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:700;cursor:pointer}.filter.active{background:#101828;color:#fff;border-color:#101828}.legend{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:11px;color:#667085}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}.green{background:#16a34a}.blue{background:#2563eb}.yellow{background:#eab308}.gray{background:#6b7280}.grid{display:grid;grid-template-columns:340px 1fr;height:660px}.side{padding:16px;overflow:auto;border-right:1px solid #e5e7eb}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.stat{border:1px solid #e5e7eb;background:#f8fafc;border-radius:12px;padding:10px}.stat b{display:block;font-size:19px}.stat span{font-size:9px;color:#667085;text-transform:uppercase}.card{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin-top:8px;cursor:pointer}.card:hover{border-color:#98a2b3}.card b{font-size:14px}.meta{font-size:11px;color:#667085;margin-top:5px;line-height:1.45}.badge{display:inline-block;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:800;margin-top:7px;background:#f2f4f7}.empty{border:1px dashed #d0d5dd;border-radius:12px;padding:16px;color:#667085;font-size:12px}.mapWrap,#map{height:100%;width:100%}.mapWrap{position:relative}.add{position:absolute;right:16px;bottom:16px;z-index:500;border:0;background:#101828;color:#fff;border-radius:10px;padding:12px 14px;font-weight:750}.sourceStatus{font-size:11px;color:#667085;margin:10px 0 2px}.footer{border-top:1px solid #e5e7eb;padding:34px 0;color:#667085;font-size:13px}.modal{position:fixed;inset:0;background:#11182766;z-index:1500;display:none;place-items:center;padding:18px}.modal.show{display:grid}.box{width:min(540px,100%);background:#fff;border-radius:20px;padding:18px}.box h3{margin:0 0 12px}.field{margin-top:10px}.field label{display:block;font-size:11px;font-weight:700;color:#667085;margin-bottom:5px}.field input,.field select{width:100%;padding:11px;border:1px solid #dfe3e8;border-radius:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modalBtns{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.note{font-size:11px;color:#667085;line-height:1.5;margin-top:9px}.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,120px);background:#101828;color:#fff;padding:10px 14px;border-radius:10px;z-index:2000;transition:.2s}.toast.show{transform:translate(-50%,0)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#101828;background:#fff}button,input,select{font:inherit}.wrap{width:min(1220px,calc(100% - 32px));margin:auto}header{position:sticky;top:0;z-index:1000;background:#fffffff2;backdrop-filter:blur(12px);border-bottom:1px solid #e5e7eb}.nav{height:70px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:20px;font-weight:850}.nav a{color:#475467;text-decoration:none;margin-left:22px;font-size:14px}.cta,.btn.dark{border:0;background:#101828;color:#fff}.cta{padding:11px 15px;border-radius:10px;font-weight:750}.hero{padding:68px 0 50px;background:linear-gradient(#fff,#f8fafc)}.heroGrid{display:grid;grid-template-columns:1.08fr .92fr;gap:46px;align-items:center}.tag{display:inline-block;border:1px solid #e5e7eb;border-radius:999px;padding:7px 10px;font-size:12px;color:#667085}.hero h1{font-size:clamp(44px,6vw,72px);line-height:.99;letter-spacing:-.055em;margin:18px 0}.hero p{font-size:18px;line-height:1.6;color:#667085;max-width:670px}.actions{display:flex;gap:10px;margin-top:24px}.btn{border:1px solid #e5e7eb;background:#fff;padding:12px 16px;border-radius:11px;font-weight:750}.visual{height:330px;border-radius:24px;border:1px solid #e5e7eb;background:radial-gradient(circle at 25% 25%,#dbeafe,transparent 30%),linear-gradient(135deg,#f8fafc,#eef2f7);position:relative;box-shadow:0 18px 50px #11182716}.visual:before{content:"OPEN-WIFI • múltiplas fontes";position:absolute;left:18px;top:18px;background:#fff;padding:11px 13px;border-radius:12px;border:1px solid #e5e7eb;font-weight:700;font-size:13px}.pin{position:absolute;width:20px;height:20px;border-radius:50%;border:4px solid #fff;box-shadow:0 5px 16px #0003}.p1{left:26%;top:48%;background:#16a34a}.p2{left:57%;top:62%;background:#2563eb}.p3{left:74%;top:34%;background:#6b7280}.p4{left:42%;top:72%;background:#eab308}.section{padding:72px 0}.section.alt{background:#f8fafc}.head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:24px}.head h2{font-size:clamp(32px,4vw,48px);letter-spacing:-.04em;margin:0}.head p{margin:0;max-width:620px;color:#667085;line-height:1.6}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.feature{border:1px solid #e5e7eb;border-radius:18px;padding:20px;background:#fff}.feature b{display:block;margin-bottom:7px}.feature p{margin:0;color:#667085;line-height:1.5;font-size:13px}.mapShell{border:1px solid #e5e7eb;border-radius:24px;overflow:hidden;box-shadow:0 18px 50px #11182716;background:#fff}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:16px;border-bottom:1px solid #e5e7eb}.search{display:flex;gap:8px}.search input{width:100%;border:1px solid #dfe3e8;border-radius:10px;padding:12px}.tool{border:1px solid #dfe3e8;background:#fff;border-radius:10px;padding:12px 14px;font-weight:700}.filters{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;border-bottom:1px solid #e5e7eb;background:#fafafa}.filter{border:1px solid #d0d5dd;background:#fff;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:700;cursor:pointer}.filter.active{background:#101828;color:#fff;border-color:#101828}.legend{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:11px;color:#667085}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}.green{background:#16a34a}.blue{background:#2563eb}.yellow{background:#eab308}.gray{background:#6b7280}.grid{display:grid;grid-template-columns:340px 1fr;height:660px}.side{padding:16px;overflow:auto;border-right:1px solid #e5e7eb}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.stat{border:1px solid #e5e7eb;background:#f8fafc;border-radius:12px;padding:10px}.stat b{display:block;font-size:19px}.stat span{font-size:9px;color:#667085;text-transform:uppercase}.card{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin-top:8px;cursor:pointer}.card:hover{border-color:#98a2b3}.card b{font-size:14px}.meta{font-size:11px;color:#667085;margin-top:5px;line-height:1.5}.commerce{font-size:12px;font-weight:800;color:#344054;margin-top:6px}.pw{margin-top:8px;padding:8px 9px;border-radius:9px;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800}.pw.none{background:#f2f4f7;color:#667085}.badge{display:inline-block;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:800;margin-top:7px;background:#f2f4f7}.empty{border:1px dashed #d0d5dd;border-radius:12px;padding:16px;color:#667085;font-size:12px}.mapWrap,#map{height:100%;width:100%}.mapWrap{position:relative}.add{position:absolute;right:16px;bottom:16px;z-index:500;border:0;background:#101828;color:#fff;border-radius:10px;padding:12px 14px;font-weight:750}.sourceStatus{font-size:11px;color:#667085;margin:10px 0 2px}.footer{border-top:1px solid #e5e7eb;padding:34px 0;color:#667085;font-size:13px}.modal{position:fixed;inset:0;background:#11182766;z-index:1500;display:none;place-items:center;padding:18px}.modal.show{display:grid}.box{width:min(540px,100%);background:#fff;border-radius:20px;padding:18px}.box h3{margin:0 0 12px}.field{margin-top:10px}.field label{display:block;font-size:11px;font-weight:700;color:#667085;margin-bottom:5px}.field input,.field select{width:100%;padding:11px;border:1px solid #dfe3e8;border-radius:10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modalBtns{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.note{font-size:11px;color:#667085;line-height:1.5;margin-top:9px}.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,120px);background:#101828;color:#fff;padding:10px 14px;border-radius:10px;z-index:2000;transition:.2s}.toast.show{transform:translate(-50%,0)}
 @media(max-width:950px){.heroGrid,.features,.grid{grid-template-columns:1fr}.features{grid-template-columns:1fr 1fr}.nav nav{display:none}.grid{height:auto}.side{max-height:330px;border-right:0;border-bottom:1px solid #e5e7eb}.mapWrap,#map{height:540px}.toolbar{grid-template-columns:1fr}.legend{width:100%;margin-left:0}.hero h1{font-size:52px}}@media(max-width:600px){.hero{padding-top:44px}.hero h1{font-size:43px}.head{align-items:start;flex-direction:column}.features{grid-template-columns:1fr}.row{grid-template-columns:1fr}.mapWrap,#map{height:480px}.stats{grid-template-columns:repeat(3,1fr)}}
 </style></head>
 <body>
@@ -59,6 +59,7 @@ var verifiedPoints=[{
  source:'verified',
  venue:'CEPE Canoas — Clube dos Empregados da Petrobras',
  name:'Wi‑Fi CEPE Canoas',
+ category:'Clube / centro esportivo',
  lat:-29.8717,lng:-51.1783,
  access:'customer',security:'protected',
  password:'',
@@ -78,13 +79,34 @@ function accessLabel(a){return {open:'ABERTO',public:'SENHA PÚBLICA',customer:'
 function color(a){return {open:'#16a34a',public:'#2563eb',customer:'#eab308',protected:'#6b7280'}[a]||'#7c3aed'}
 function classifyOSM(t){
  var acc=(t.internet_access||'').toLowerCase(), fee=(t.internet_access_fee||t.fee||'').toLowerCase();
+ var publicPw=t['internet_access:password']||t['wifi:password']||t['password'];
  if(acc==='wlan' || acc==='yes'){
-   if(fee==='yes') return 'customer';
-   if(t['internet_access:password']||t['internet_access:ssid']) return 'public';
+   if(publicPw) return 'public';
+   if(fee==='yes'||t.access==='customers'||t.access==='members'||t.internet_access==='customers') return 'customer';
    return 'open';
  }
  return 'protected';
 }
+function categoryLabel(t){
+ var a=t.amenity||'',s=t.shop||'',tr=t.tourism||'',l=t.leisure||'',o=t.office||'';
+ var mapA={restaurant:'Restaurante',cafe:'Café',fast_food:'Fast-food',bar:'Bar',pub:'Pub',fuel:'Posto',bank:'Banco',pharmacy:'Farmácia',hospital:'Hospital',clinic:'Clínica',library:'Biblioteca',school:'Escola',university:'Universidade',college:'Faculdade',community_centre:'Centro comunitário',marketplace:'Mercado',bus_station:'Rodoviária'};
+ var mapS={supermarket:'Supermercado',mall:'Shopping',convenience:'Conveniência',bakery:'Padaria',clothes:'Loja de roupas',electronics:'Eletrônicos',department_store:'Loja de departamentos',hardware:'Ferragens'};
+ var mapT={hotel:'Hotel',hostel:'Hostel',museum:'Museu',attraction:'Atração turística'};
+ if(mapA[a])return mapA[a]; if(mapS[s])return mapS[s]; if(mapT[tr])return mapT[tr];
+ if(l==='sports_centre')return 'Centro esportivo'; if(l==='fitness_centre')return 'Academia';
+ if(o)return 'Escritório'; if(a)return a.replaceAll('_',' '); if(s)return s.replaceAll('_',' ');
+ return 'Estabelecimento';
+}
+function addressFromTags(t){
+ var parts=[t['addr:street'],t['addr:housenumber'],t['addr:suburb'],t['addr:city']].filter(Boolean);
+ return parts.join(', ');
+}
+function distanceMeters(a,b,c,d){
+ var R=6371000,toRad=Math.PI/180,dp=(c-a)*toRad,dl=(d-b)*toRad;
+ var x=Math.sin(dp/2)**2+Math.cos(a*toRad)*Math.cos(c*toRad)*Math.sin(dl/2)**2;
+ return 2*R*Math.asin(Math.sqrt(x));
+}
+function distanceLabel(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1).replace('.',',')+' km'}
 function allPoints(){
  var m={};
  verifiedPoints.concat(remote,local,osm).forEach(function(p){m[p.id]=p});
@@ -92,11 +114,14 @@ function allPoints(){
 }
 function passes(p){return activeFilter==='all'||p.access===activeFilter}
 function popupHTML(p){
- var pw=(p.access==='public'&&p.password)?'<br><b>Senha pública autorizada:</b> '+esc(p.password):'';
+ var pw=(p.access==='public'&&p.password)?'<div class="pw">Senha pública: '+esc(p.password)+'</div>':'<div class="pw none">'+(p.access==='open'?'Sem senha':p.access==='customer'?'Senha fornecida no local':'Senha não pública')+'</div>';
  var addr=p.address?'<br>'+esc(p.address):'';
  var ver=p.verified?'<br><b>✓ Verificado</b>':'';
+ var cat=p.category?'<br><small>'+esc(p.category)+'</small>':'';
+ var hours=p.openingHours?'<br><small>Horário: '+esc(p.openingHours)+'</small>':'';
+ var contact=p.phone?'<br><small>Tel.: '+esc(p.phone)+'</small>':'';
  var note=p.note?'<br><small>'+esc(p.note)+'</small>':'';
- return '<b>'+esc(p.venue||p.name||'Ponto Wi‑Fi')+'</b><br>'+esc(p.name||'SSID não informado')+'<br><b>'+accessLabel(p.access)+'</b>'+addr+ver+pw+note;
+ return '<b>'+esc(p.venue||p.name||'Ponto Wi‑Fi')+'</b>'+cat+'<br>'+esc(p.name||'SSID não informado')+'<br><b>'+accessLabel(p.access)+'</b>'+addr+hours+contact+ver+pw+note;
 }
 function render(){
  markers.forEach(function(m){map.removeLayer(m)});markers=[];
@@ -104,9 +129,12 @@ function render(){
  all.forEach(function(p){if(p.verified)ver++;if(!passes(p))return;var m=L.circleMarker([p.lat,p.lng],{radius:8,color:'#fff',weight:2,fillColor:color(p.access),fillOpacity:1}).addTo(map).bindPopup(popupHTML(p));markers.push(m);if(b.contains([p.lat,p.lng]))vis.push(p)});
  el('total').textContent=all.length;el('visible').textContent=vis.length;el('verified').textContent=ver;
  el('list').innerHTML=vis.length?'':'<div class="empty">Nenhum ponto encontrado neste filtro/área nas fontes consultadas. Isso não significa que não existam redes físicas no local.</div>';
- vis.sort(function(a,b){return (b.verified?1:0)-(a.verified?1:0)}).slice(0,40).forEach(function(p){
+ var c=map.getCenter();
+ vis.forEach(function(p){p._distance=distanceMeters(c.lat,c.lng,p.lat,p.lng)});
+ vis.sort(function(a,b){return (b.verified?1:0)-(a.verified?1:0) || a._distance-b._distance}).slice(0,50).forEach(function(p){
    var d=document.createElement('div');d.className='card';
-   d.innerHTML='<b>'+esc(p.venue||p.name)+'</b><div class="meta">'+esc(p.name||'SSID não informado')+'<br>'+(p.source==='verified'?'OpenWiFi verificado':p.source==='osm'?'OpenStreetMap':p.source==='supabase'?'Base compartilhada':'Contribuição neste navegador')+'</div><span class="badge" style="color:'+color(p.access)+'">'+accessLabel(p.access)+(p.verified?' • ✓ VERIFICADO':'')+'</span>';
+   var pw=p.access==='public'&&p.password?'<div class="pw">Senha pública: '+esc(p.password)+'</div>':'<div class="pw none">'+(p.access==='open'?'Sem senha':p.access==='customer'?'Solicitar senha no local':'Senha não pública')+'</div>';
+   d.innerHTML='<b>'+esc(p.venue||p.name)+'</b><div class="commerce">'+esc(p.category||'Estabelecimento')+' • '+distanceLabel(p._distance)+'</div><div class="meta">'+esc(p.name||'SSID não informado')+(p.address?'<br>'+esc(p.address):'')+(p.openingHours?'<br>Horário: '+esc(p.openingHours):'')+'<br>'+(p.source==='verified'?'OpenWiFi verificado':p.source==='osm'?'OpenStreetMap':p.source==='supabase'?'Base compartilhada':'Contribuição neste navegador')+'</div><span class="badge" style="color:'+color(p.access)+'">'+accessLabel(p.access)+(p.verified?' • ✓ VERIFICADO':'')+'</span>'+pw;
    d.onclick=function(){map.setView([p.lat,p.lng],17)};el('list').appendChild(d);
  });
 }
@@ -116,7 +144,7 @@ async function search(){
 }
 async function loadOSM(){
  var b=map.getBounds(),s=b.getSouth().toFixed(5),w=b.getWest().toFixed(5),n=b.getNorth().toFixed(5),e=b.getEast().toFixed(5);
- var q='[out:json][timeout:15];(node["internet_access"="wlan"]('+s+','+w+','+n+','+e+');way["internet_access"="wlan"]('+s+','+w+','+n+','+e+');node["internet_access:ssid"]('+s+','+w+','+n+','+e+'););out center tags 250;';
+ var q='[out:json][timeout:18];(nwr["internet_access"="wlan"]('+s+','+w+','+n+','+e+');nwr["internet_access"="yes"]('+s+','+w+','+n+','+e+');nwr["internet_access:ssid"]('+s+','+w+','+n+','+e+'););out center tags 400;';
  var endpoints=[
    'https://overpass.kumi.systems/api/interpreter',
    'https://overpass-api.de/api/interpreter',
@@ -141,7 +169,8 @@ async function loadOSM(){
        var t=x.tags||{},lat=x.lat||(x.center&&x.center.lat),lng=x.lon||(x.center&&x.center.lon);
        if(lat&&lng){
          var id='osm-'+x.type+'-'+x.id;
-         ids[id]={id:id,source:'osm',venue:t.name||t.operator||'Local com Wi‑Fi',name:t['internet_access:ssid']||t.ssid||'SSID não informado',lat:lat,lng:lng,access:classifyOSM(t),password:'',verified:false,address:'',note:'Dados públicos do OpenStreetMap.'}
+         var publicPw=t['internet_access:password']||t['wifi:password']||t['password']||'';
+         ids[id]={id:id,source:'osm',venue:t.name||t.brand||t.operator||'Local com Wi‑Fi',name:t['internet_access:ssid']||t.ssid||'SSID não informado',lat:lat,lng:lng,access:classifyOSM(t),password:publicPw,verified:false,address:addressFromTags(t),category:categoryLabel(t),openingHours:t.opening_hours||'',phone:t.phone||t['contact:phone']||'',website:t.website||t['contact:website']||'',note:'Dados públicos do OpenStreetMap.'}
        }
      });
      osm=Object.values(ids);
